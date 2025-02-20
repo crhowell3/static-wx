@@ -1,0 +1,30 @@
+# Valid conditions:
+# "sunny"
+# "cloudy"
+# "rain"
+# "thunderstorm"
+# "windy"
+# "snow"
+
+forecast:
+  - day: "Sun"
+    temp: 72
+    condition: "sunny"
+  - day: "Mon"
+    temp: 75
+    condition: "cloudy"
+  - day: "Tue"
+    temp: 88
+    condition: "rain"
+  - day: "Wed"
+    temp: 73
+    condition: "cloudy"
+  - day: "Thu"
+    temp: 77
+    condition: "rain"
+  - day: "Fri"
+    temp: 68
+    condition: "cloudy"
+  - day: "Sat"
+    temp: 71
+    condition: "thunderstorm"
