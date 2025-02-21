@@ -49,23 +49,32 @@ produces a downloadable graphic in PNG format.
 
 ## 🔰 Getting Started
 
-This application requires `node` and `npm`. All other dependencies will be
-downloaded via `npm`.
+### Build Dependencies
 
-First, clone this repository:
+| Dependency | Version |
+| ---------- | ------- |
+| Node.js    | 23.8.0  |
+| npm        | 10.9.2  |
+
+> [!NOTE]
+> This was developed with the dependency versions listed in the table above.
+> Older versions of Node.js and npm have not been tested, so no guarantee can be
+> made that they will work. It is highly recommended to use the versions in the
+> table exactly.
+
+### Installation
+
+First, clone this repository and install dependencies:
 
 ```shell
-git clone git@github.com:crhowell3/static-wx.git
+git clone --depth 1 git@github.com:crhowell3/static-wx.git
 cd static-wx
-```
-
-Then, download all the packages with `npm`:
-
-```shell
 npm i
 ```
 
-Finally, run the application:
+### Configuring
+
+Edit `public/forecast.yaml` and then run:
 
 ```shell
 npm run dev
@@ -84,6 +93,7 @@ Here is an example of a forecast graphic that this produces:
   Copyright &copy; 2025-present
   <a href="https://github.com/crhowell3" target="_blank">Cameron Howell</a>
 </p>
+
 <p align="center">
   <a href="https://github.com/crhowell3/static-wx/blob/main/LICENSE"
     ><img
