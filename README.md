@@ -38,9 +38,7 @@
     />
   </a>
 </p>
-
 &nbsp;
-
 ## 💭 About
 
 static-wx is a simple React Router Single Page Application (SPA) that takes in
@@ -61,6 +59,8 @@ produces a downloadable graphic in PNG format.
 > Older versions of Node.js and npm have not been tested, so no guarantee can be
 > made that they will work. It is highly recommended to use the versions in the
 > table exactly.
+
+Download Node.js [here](https://nodejs.org/en/download).
 
 ### Installation
 
