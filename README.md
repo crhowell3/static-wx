@@ -39,6 +39,7 @@
   </a>
 </p>
 &nbsp;
+
 ## 💭 About
 
 static-wx is a simple React Router Single Page Application (SPA) that takes in
