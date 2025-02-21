@@ -76,7 +76,9 @@ http://localhost:5173 in your web browser.
 
 Here is an example of a forecast graphic that this produces:
 
-![Weather forecast example](assets/images/wx-forecast.png "Weather Forecast")
+<p align="center">
+  <img src="assets/images/wx-forecast.png" />
+</p>
 
 <p align="center">
   Copyright &copy; 2025-present
