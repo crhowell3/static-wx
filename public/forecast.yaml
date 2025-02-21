@@ -8,23 +8,37 @@
 
 forecast:
   - day: "Sun"
-    temp: 72
+    high: 72
+    low: 54
+    precip: 0
     condition: "sunny"
   - day: "Mon"
-    temp: 75
+    high: 76
+    low: 53
+    precip: 30 
     condition: "cloudy"
   - day: "Tue"
-    temp: 88
+    high: 79
+    low: 61
+    precip: 60
     condition: "rain"
   - day: "Wed"
-    temp: 73
+    high: 73
+    low: 67
+    precip: 0
     condition: "cloudy"
   - day: "Thu"
-    temp: 77
+    high: 77
+    low: 62
+    precip: 75
     condition: "rain"
   - day: "Fri"
-    temp: 68
+    high: 68
+    low: 53
+    precip: 15
     condition: "cloudy"
   - day: "Sat"
-    temp: 71
+    high: 71
+    low: 61
+    precip: 95
     condition: "thunderstorm"

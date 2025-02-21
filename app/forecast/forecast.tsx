@@ -50,14 +50,16 @@ export const WeatherForecast = () => {
   return (
     <div className="flex flex-col items-center">
       <div ref={forecastRef} className="flex gap-4 p-6 bg-blue-100 rounded-lg justify-center fixed-width">
-        {weatherData.map(({ day, temp, condition }) => (
+        {weatherData.map(({ day, high, low, precip, condition }) => (
           <div
             key={day}
             className="flex flex-col items-center bg-white p-4 rounded-lg w-24"
           >
             <span className="font-bold text-lg text-black">{day}</span>
             {getWeatherIcon(condition)}
-            <span className="text-xl font-semibold mt-2 text-black">{temp}°F</span>
+            <span className="text-md font-semibold mt-2 text-black">{precip}%</span>
+            <span className="text-xl font-semibold mt-2 text-black">{high}°F</span>
+            <span className="text-xl font-semibold mt-2 text-black">{low}°F</span>
           </div>
         ))}
       </div>
