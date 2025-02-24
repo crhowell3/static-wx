@@ -1,4 +1,4 @@
-import { Sun, CloudRain, Cloud, CloudSnow, CloudLightning, Wind } from "lucide-react";
+import { Sun, CloudRain, Cloud, CloudSun, Cloudy, CloudSnow, CloudLightning, Wind } from "lucide-react";
 import React, { useState, useEffect, useRef } from "react";
 import yaml from "js-yaml";
 import html2canvas from "html2canvas-pro";
@@ -7,8 +7,12 @@ const getWeatherIcon = (condition) => {
   switch (condition) {
     case "sunny":
       return <Sun size={32} className="text-yellow-500" />;
-    case "cloudy":
+    case "mostly sunny":
+      return <CloudSun size={32} className="text-gray-400" />;
+    case "partly cloudy:
       return <Cloud size={32} className="text-gray-400" />;
+    case "cloudy":
+      return <Cloudy size={32} className="text-gray-400" />;
     case "rain":
       return <CloudRain size={32} className="text-blue-400" />;
     case "thunderstorm":
