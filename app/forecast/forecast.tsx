@@ -9,7 +9,7 @@ const getWeatherIcon = (condition) => {
       return <Sun size={32} className="text-yellow-500" />;
     case "mostly sunny":
       return <CloudSun size={32} className="text-gray-400" />;
-    case "partly cloudy:
+    case "partly cloudy":
       return <Cloud size={32} className="text-gray-400" />;
     case "cloudy":
       return <Cloudy size={32} className="text-gray-400" />;
