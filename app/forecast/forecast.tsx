@@ -3,24 +3,34 @@ import React, { useState, useEffect, useRef } from "react";
 import yaml from "js-yaml";
 import html2canvas from "html2canvas-pro";
 
-const getWeatherIcon = (condition) => {
+const getWeatherIcon = (condition: String) => {
   switch (condition) {
     case "sunny":
       return <Sun size={32} className="text-yellow-500" />;
     case "mostly sunny":
-      return <CloudSun size={32} className="text-gray-400" />;
+      return <div className="condition-icon mostly-sunny">
+          <CloudSun size={32} />
+        </div>;
     case "partly cloudy":
       return <Cloud size={32} className="text-gray-400" />;
     case "cloudy":
       return <Cloudy size={32} className="text-gray-400" />;
     case "rain":
-      return <CloudRain size={32} className="text-blue-400" />;
+      return <div className="condition-icon rain">
+          <CloudRain size={32} />
+        </div>;
     case "thunderstorm":
-      return <CloudLightning size={32} className="text-purple-500" />;
+      return <div className="condition-icon thunderstorm">
+          <CloudLightning size={32} />
+        </div>
     case "windy":
-      return <Wind size={32} className="text-gray-500" />;
+      return <div className="condition-icon windy">
+          <Wind size={32} />
+        </div>;
     case "snow":
-      return <CloudSnow size={32} className="text-blue-200" />;
+      return <div className="condition-icon snow">
+          <CloudSnow size={32} />
+        </div>
     default:
       return <Cloud size={32} className="text-gray-400" />;
   }
