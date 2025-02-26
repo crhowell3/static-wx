@@ -1,10 +1,10 @@
 import type { Route } from "./+types/home";
-import { WeatherForecast } from "../forecast/forecast";
+import { WeatherForecast } from "../pages/forecast";
 
 export function meta({}: Route.MetaArgs) {
   return [
-    { title: "New React Router App" },
-    { name: "description", content: "Welcome to React Router!" },
+    { title: "static-wx" },
+    { name: "description", content: "Create and download weather infographics!" },
   ];
 }
 
