@@ -1,7 +1,33 @@
 import { Sun, CloudRain, Cloud, CloudSun, Cloudy, CloudSnow, CloudLightning, Wind } from "lucide-react";
 import React, { useState, useEffect, useRef } from "react";
+import { Bar } from "react-chartjs-2";
 import yaml from "js-yaml";
 import html2canvas from "html2canvas-pro";
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+} from "chart.js";
+
+ChartJS.register(CategoryScale, LinearScale, BarElement, Title);
+
+const colorMapping: Record<number, string> = {
+  1: "#84CC16",
+  2: "#EAB308",
+  3: "#F97316",
+  4: "#EF4444",
+  5: "#EC4899",
+};
+
+const severityLabels: Record<number, string> = {
+  1: "MRGL",
+  2: "SLGT",
+  3: "ENH",
+  4: "MDT",
+  5: "HIGH",
+};
 
 const getWeatherIcon = (condition: String) => {
   switch (condition) {
@@ -38,7 +64,18 @@ const getWeatherIcon = (condition: String) => {
 
 export const WeatherForecast = () => {
   const [weatherData, setWeatherData] = useState([]);
+  const [threatData, setThreatData] = useState<{
+    labels: string[];
+    datasets: { 
+      label: string;
+      data: number[];
+      backgroundColor: string[];
+      borderColor: string;
+      borderWidth: number
+    }[];
+  } | null>(null);
   const forecastRef = useRef(null);
+  const threatRef = useRef(null);
 
   const saveAsPng = () => {
     if (forecastRef.current) {
@@ -51,12 +88,47 @@ export const WeatherForecast = () => {
     }
   };
 
+  const saveThreadPng = () => {
+    if (threatRef.current) {
+      html2canvas(threatRef.current).then((canvas) => {
+        const link = document.createElement("a");
+        link.download = "threatcast.png";
+        link.href = canvas.toDataURL("image/png");
+        link.click();
+      });
+    }
+  }
+
   useEffect(() => {
     fetch("./forecast.yaml")
       .then((response) => response.text())
       .then((yamlText) => {
         const parsedData = yaml.load(yamlText);
         setWeatherData(parsedData.forecast);
+      })
+      .catch((error) => console.error("Error loading YAML: ", error));
+
+    fetch("./threats.yaml")
+      .then((response) => response.text())
+      .then((yamlText) => {
+        const data = yaml.load(yamlText);
+        if (data && data.weather_risks) {
+          const labels = Object.keys(data.weather_risks);
+          const values: number[] = Object.values(data.weather_risks);
+
+          setThreatData({
+            labels,
+            datasets: [
+              {
+                label: "Severity (0-5)",
+                data: values,
+                backgroundColor: values.map((value) => colorMapping[value]),
+                borderColor: "black",
+                borderWidth: 0,
+              },
+            ],
+          });
+        }
       })
       .catch((error) => console.error("Error loading YAML: ", error));
     }, []);
@@ -78,6 +150,60 @@ export const WeatherForecast = () => {
         ))}
       </div>
       <button onClick={saveAsPng} className="mt-4 px-4 py-2 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700">
+        Save as PNG
+      </button>
+      <br/>
+      <div ref={threatRef} className="flex gap-4 p-6 bg-blue-100 rounded-lg justify-center fixed-width">
+        <div style={{ width: "700px" }} className="items-center p-4 rounded-lg bg-white">
+          {threatData && (
+            <Bar
+              data={threatData}
+              options={{
+                indexAxis: 'y' as const,
+                scales: {
+                  x: {
+                    position: 'top' as const,
+                    min: 0,
+                    max: 5,
+                    ticks: {
+                      stepSize: 1,
+                      align: "center",
+                      callback: (value) => {
+                        const numericValue = Number(value);
+                        return severityLabels[numericValue] || "";
+                      },
+                    },
+                    grid: {
+                      drawTicks: false,
+                    }
+                  },
+                  y: {
+                    grid: {
+                      display: false
+                    }
+                  }
+                },
+                responsive: true,
+                maintainAspectRatio: false,
+                animation: false,
+                plugins: {
+                  legend: {
+                    display: false,
+                  },
+                  tooltip: {
+                    enabled: false,
+                  },
+                  title: {
+                    display: true,
+                    text: "Hazards"
+                  },
+                },
+              }}
+            />
+          )}
+        </div>
+      </div>
+      <button onClick={saveThreadPng} className="mt-4 px-4 py-2 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700">
         Save as PNG
       </button>
     </div>

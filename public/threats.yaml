@@ -1,0 +1,5 @@
+weather_risks:
+  TORNADOES: 3
+  WIND: 5
+  HAIL: 2
+  FLOODING: 1
