@@ -1,6 +1,7 @@
 import type { JSX } from 'react'
 import type { ForecastData } from '../types/ForecastDataTypes'
 import ConditionIcon from './ConditionIcon'
+import { TriangleAlert } from 'lucide-react'
 
 interface ForecastDataProps {
     forecastData: ForecastData[]
@@ -14,20 +15,27 @@ const WeeklyForecast = ({ forecastData }: ForecastDataProps): JSX.Element => {
                     <div
                         key={day}
                         className={
-                            'flex flex-col items-center p-4 rounded-lg w-24 ' +
-                            (severe ? 'bg-red-200' : 'bg-white')
+                            'flex flex-col items-center p-4 rounded-lg w-24 bg-white'
                         }
                     >
                         <span
                             className={
-                                'font-bold mb-4 text-lg ' +
+                                'font-bold text-lg ' +
                                 (day === 'Sat' || day === 'Sun'
-                                    ? 'text-red-400'
-                                    : 'text-black')
+                                    ? 'text-red-400 '
+                                    : 'text-black ') + (severe ? '' : 'mb-5')
                             }
                         >
                             {day}
                         </span>
+                        {severe ? (
+                            <TriangleAlert
+                                size={20}
+                                className="text-red-600"
+                            />
+                        ) : (
+                            <></>
+                        )}
                         <ConditionIcon condition={condition} />
                         <span className="text-sm font-semibold mt-4 text-black">
                             {precip}%
