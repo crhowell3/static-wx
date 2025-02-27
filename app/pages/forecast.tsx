@@ -1,17 +1,8 @@
 import { useRef } from 'react'
 import html2canvas from 'html2canvas-pro'
-import {
-    Chart as ChartJS,
-    CategoryScale,
-    LinearScale,
-    BarElement,
-    Title,
-} from 'chart.js'
 import Threatcast from '../components/Threatcast'
 import readConfigFiles from '../hooks/readConfigFiles'
 import WeeklyForecast from '../components/WeeklyForecast'
-
-ChartJS.register(CategoryScale, LinearScale, BarElement, Title)
 
 export const WeatherForecast = () => {
     const forecastRef = useRef<HTMLDivElement | null>(null)

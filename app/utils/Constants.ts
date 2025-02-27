@@ -5,11 +5,3 @@ export const colorMapping: Record<number, string> = {
     4: '#EF4444',
     5: '#EC4899',
 }
-
-export const severityLabels: Record<number, string> = {
-    1: 'MRGL',
-    2: 'SLGT',
-    3: 'ENH',
-    4: 'MDT',
-    5: 'HIGH',
-}
