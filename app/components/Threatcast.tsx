@@ -1,15 +1,15 @@
 import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  Title,
-} from 'chart.js'
-import { Bar } from 'react-chartjs-2'
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  ResponsiveContainer,
+  Rectangle,
+  Cell,
+} from 'recharts'
 import React, { useState } from 'react'
 import { Tornado, Waves, CloudHail, Wind } from 'lucide-react'
-
-ChartJS.register(CategoryScale, LinearScale, BarElement, Title)
 
 const colorMapping: Record<number, string> = {
   1: '#84CC16',
@@ -30,78 +30,65 @@ const severityLabels: Record<string, number> = {
 
 const categories: string[] = ['Tornadoes', 'Wind', 'Hail', 'Flooding']
 
-type ThreatLevels = {
-  Tornadoes: string
-  Wind: string
-  Hail: string
-  Flooding: string
+const formatYAxis = (value: number) => {
+  switch (value) {
+    case 1:
+      return 'MRGL'
+    case 2:
+      return 'SLGT'
+    case 3:
+      return 'ENH'
+    case 4:
+      return 'MDT'
+    case 5:
+      return 'HIGH'
+    default:
+      return ''
+  }
 }
 
-const options = {
-  indexAxis: 'y' as const,
-  scales: {
-    x: {
-      position: 'top' as const,
-      min: 0,
-      max: 5,
-      ticks: {
-        stepSize: 1,
-        callback: value => {
-          return (
-            Object.keys(severityLabels).find(
-              key => severityLabels[key] === value,
-            ) || ''
-          )
-        },
-      },
-      grid: {
-        drawTicks: false,
-      },
-    },
-    y: {
-      grid: {
-        display: false,
-      },
-    },
-  },
-  responsive: false,
-  animation: false,
-  maintainAspectRatio: false,
-  plugins: {
-    title: {
-      display: true,
-      text: 'Hazards',
-    },
-  },
+const renderCustomAxisTick = ({ x, y, payload }) => {
+  let icon = <></>
+  switch (payload.value) {
+    case 'Tornadoes':
+      icon = <Tornado size={24} className='text-black' />
+      break
+    case 'Wind':
+      icon = <Wind size={24} className='text-black' />
+      break
+    case 'Hail':
+      icon = <CloudHail size={24} className='text-black' />
+      break
+    case 'Flooding':
+      icon = <Waves size={24} className='text-black' />
+      break
+  }
+
+  return <g transform={`translate(${x - 30}, ${y - 10})`}>{icon}</g>
 }
 
 const Threatcast: React.FC = ({ threatRef }) => {
-  const [threatLevels, setThreatLevels] = useState<ThreatLevels>({
+  const [threatLevels, setThreatLevels] = useState({
     Tornadoes: 'None',
     Wind: 'None',
     Hail: 'None',
     Flooding: 'None',
   })
 
+  // Generate the threatData dynamically based on threatLevels
+  const generateThreatData = () => {
+    return categories.map(category => ({
+      name: category,
+      uv: severityLabels[threatLevels[category]],
+    }))
+  }
+
   const handleChange = (category: string, value: string) => {
     setThreatLevels(prev => ({ ...prev, [category]: value }))
   }
 
-  const threatData = {
-    labels: categories,
-    datasets: [
-      {
-        label: 'Threatcast',
-        data: categories.map(cat => severityLabels[threatLevels[cat]]),
-        backgroundColor: categories.map(
-          cat => colorMapping[severityLabels[threatLevels[cat]]] || '#ccc',
-        ),
-        borderColor: 'black',
-        borderWidth: 0,
-        barThickness: 50,
-      },
-    ],
-  }
+  // Generate threat data whenever the threatLevels state changes
+  const threatData = generateThreatData()
 
   return (
     <div className='flex flex-col items-center gap-6'>
@@ -109,7 +96,7 @@ const Threatcast: React.FC = ({ threatRef }) => {
         <h2 className='text-lg font-bold mb-4 text-black'>
           Threat Level Editor
         </h2>
-        <div className='grid grid-cols-2 gap-4'>
+        <div className='grid grid-cols-4 gap-4'>
           {categories.map(category => (
             <div key={category} className='flex flex-col items-center'>
               <label className='font-semibold text-black'>{category}</label>
@@ -133,7 +120,48 @@ const Threatcast: React.FC = ({ threatRef }) => {
         className='p-6 rounded-lg bg-white flex justify-center items-center'
         style={{ width: '700px', height: '500px' }}
       >
-        <Bar data={threatData} height='450px' width='650px' options={options} />
+        <ResponsiveContainer width='100%' height='100%'>
+          <div>
+            <h3 className='text-xl font-bold mb-4 text-black text-center'>
+              Weather Hazards
+            </h3>
+            <BarChart
+              width={650}
+              height={400}
+              layout='vertical'
+              data={threatData}
+              margin={{
+                top: 15,
+                right: 30,
+                left: 20,
+                bottom: 5,
+              }}
+            >
+              <CartesianGrid strokeDasharray='3 3' />
+              <XAxis
+                type='number'
+                interval={0}
+                tickCount={6}
+                tickFormatter={formatYAxis}
+                ticks={[]}
+                allowDecimals={false}
+              />
+              <YAxis
+                type='category'
+                dataKey='name'
+                tick={renderCustomAxisTick}
+              />
+              <Bar
+                dataKey='uv'
+                activeBar={<Rectangle fill='gold' stroke='purple' />}
+              >
+                {threatData.map((entry, index) => (
+                  <Cell key={`cell-${index}`} fill={colorMapping[entry.uv]} />
+                ))}
+              </Bar>
+            </BarChart>
+          </div>
+        </ResponsiveContainer>
       </div>
     </div>
   )
