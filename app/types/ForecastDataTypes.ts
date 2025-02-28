@@ -6,14 +6,3 @@ export interface ForecastData {
     condition: string
     severe: boolean
 }
-
-export interface ThreatData {
-    labels: string[]
-    datasets: {
-        label: string
-        data: number[]
-        backgroundColor: string[]
-        borderColor: string
-        borderWidth: number
-    }[]
-}

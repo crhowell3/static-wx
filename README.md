@@ -84,10 +84,12 @@ npm run dev
 This will build and run the application, and by default, it can be accessed at
 http://localhost:5173 in your web browser.
 
-Here is an example of a forecast graphic that this produces:
+Here is an example of the infographics that this can produce:
 
 <p align="center">
   <img src="assets/images/wx-forecast.png" />
+  <br/>
+  <img src="assets/images/threatcast.png" />
 </p>
 
 <p align="center">
