@@ -16,16 +16,14 @@ const colorMapping: Record<number, string> = {
   2: '#EAB308',
   3: '#F97316',
   4: '#EF4444',
-  5: '#EC4899',
 }
 
 const severityLabels: Record<string, number> = {
-  None: 0,
-  MRGL: 1,
-  SLGT: 2,
-  ENH: 3,
-  MDT: 4,
-  HIGH: 5,
+  NONE: 0,
+  LOW: 1,
+  MEDIUM: 2,
+  HIGH: 3,
+  EXTREME: 4,
 }
 
 const categories: string[] = ['Tornadoes', 'Wind', 'Hail', 'Flooding']
@@ -33,15 +31,13 @@ const categories: string[] = ['Tornadoes', 'Wind', 'Hail', 'Flooding']
 const formatYAxis = (value: number) => {
   switch (value) {
     case 1:
-      return 'MRGL'
+      return 'LOW'
     case 2:
-      return 'SLGT'
+      return 'MEDIUM'
     case 3:
-      return 'ENH'
-    case 4:
-      return 'MDT'
-    case 5:
       return 'HIGH'
+    case 4:
+      return 'EXTREME'
     default:
       return ''
   }
@@ -69,10 +65,10 @@ const renderCustomAxisTick = ({ x, y, payload }) => {
 
 const Threatcast: React.FC = ({ threatRef }) => {
   const [threatLevels, setThreatLevels] = useState({
-    Tornadoes: 'None',
-    Wind: 'None',
-    Hail: 'None',
-    Flooding: 'None',
+    Tornadoes: 'NONE',
+    Wind: 'NONE',
+    Hail: 'NONE',
+    Flooding: 'NONE',
   })
 
   // Generate the threatData dynamically based on threatLevels
@@ -132,7 +128,7 @@ const Threatcast: React.FC = ({ threatRef }) => {
               data={threatData}
               margin={{
                 top: 15,
-                right: 30,
+                right: 40,
                 left: 20,
                 bottom: 5,
               }}
@@ -141,7 +137,7 @@ const Threatcast: React.FC = ({ threatRef }) => {
               <XAxis
                 type='number'
                 interval={0}
-                tickCount={6}
+                tickCount={5}
                 tickFormatter={formatYAxis}
                 ticks={[]}
                 allowDecimals={false}
