@@ -18,7 +18,7 @@ const WeeklyForecast = ({ forecastData }: ForecastDataProps): JSX.Element => {
           <span
             className={
               'font-bold text-lg ' +
-              (day === 'Sat' || day === 'Sun'
+              (day.toUpperCase() === 'SAT' || day.toUpperCase() === 'SUN'
                 ? 'text-red-400 '
                 : 'text-black ') +
               (severe ? '' : 'mb-5')

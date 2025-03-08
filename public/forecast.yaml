@@ -16,7 +16,7 @@ forecast:
     condition: "sunny"
     severe: false
   - day: "Mon"
-    high: 76
+    high: 90
     low: 53
     precip: 30 
     condition: "mostly sunny"
