@@ -130,7 +130,7 @@ export const WeatherForecast = () => {
               onChange={handleZulu}
               name='00z'
             />
-            <label for='00z'>00z</label>
+            <label htmlFor='00z'>00z</label>
           </div>
           <div className='flex gap-1'>
             <input
@@ -141,7 +141,7 @@ export const WeatherForecast = () => {
               onChange={handleZulu}
               name='12z'
             />
-            <label for='12z'>12z</label>
+            <label htmlFor='12z'>12z</label>
           </div>
         </div>
       </form>
