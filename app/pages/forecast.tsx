@@ -2,10 +2,11 @@ import { useEffect, useRef, useState } from 'react'
 import html2canvas from 'html2canvas-pro'
 import Threatcast from '../components/Threatcast'
 import yaml from 'js-yaml'
-import WeeklyForecast from '../components/WeeklyForecast'
+import WeeklyForecast from '../components/Forecast'
 import axios from 'axios'
 import type { ForecastData } from '~/types/ForecastDataTypes'
 import VersionTag from '~/components/VersionTag'
+import ForecastForm from '~/components/ForecastForm'
 
 export const WeatherForecast = () => {
   const forecastRef = useRef<HTMLDivElement | null>(null)
@@ -109,6 +110,7 @@ export const WeatherForecast = () => {
 
   return (
     <div className='flex flex-col items-center'>
+      <ForecastForm />
       <div
         ref={forecastRef}
         className='flex flex-col p-4 bg-blue-100 rounded-lg justify-center fixed-width'
