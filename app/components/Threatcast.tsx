@@ -10,6 +10,7 @@ import {
 } from 'recharts'
 import React, { useState } from 'react'
 import { Tornado, Waves, CloudHail, Wind } from 'lucide-react'
+import VersionTag from './VersionTag'
 
 const colorMapping: Record<number, string> = {
   1: '#84CC16',
@@ -70,6 +71,7 @@ const Threatcast: React.FC = ({ threatRef }) => {
     Hail: 'NONE',
     Flooding: 'NONE',
   })
+  const [city, setCity] = useState('')
 
   // Generate the threatData dynamically based on threatLevels
   const generateThreatData = () => {
@@ -81,6 +83,10 @@ const Threatcast: React.FC = ({ threatRef }) => {
 
   const handleChange = (category: string, value: string) => {
     setThreatLevels(prev => ({ ...prev, [category]: value }))
+  }
+
+  const handleTextInput = (value: string) => {
+    setCity(value)
   }
 
   // Generate threat data whenever the threatLevels state changes
@@ -110,17 +116,29 @@ const Threatcast: React.FC = ({ threatRef }) => {
             </div>
           ))}
         </div>
+        <div className='flex flex-col items-center'>
+          <label className='font-semibold text-black'>City</label>
+          <input
+            type='text'
+            name='City'
+            className='mt-2 p-2 border rounded-lg text-black'
+            onChange={e => handleTextInput(e.target.value)}
+          />
+        </div>
       </div>
       <div
         ref={threatRef}
-        className='p-6 rounded-lg bg-white flex justify-center items-center'
+        className='p-6 rounded-lg bg-white flex justify-center items-center flex-col'
         style={{ width: '700px', height: '500px' }}
       >
         <ResponsiveContainer width='100%' height='100%'>
           <div>
-            <h3 className='text-xl font-bold mb-4 text-black text-center'>
-              Weather Hazards
+            <h3 className='text-xl font-bold text-black text-center'>
+              Hazards Outlook {city !== '' ? `for ${city}` : ''}
             </h3>
+            <h4 className='text-md font-bold mb-4 text-black text-center'>
+              FRI PM - SAT AM
+            </h4>
             <BarChart
               width={650}
               height={400}
@@ -158,6 +176,7 @@ const Threatcast: React.FC = ({ threatRef }) => {
             </BarChart>
           </div>
         </ResponsiveContainer>
+        <VersionTag />
       </div>
     </div>
   )

@@ -5,6 +5,7 @@ import yaml from 'js-yaml'
 import WeeklyForecast from '../components/WeeklyForecast'
 import axios from 'axios'
 import type { ForecastData } from '~/types/ForecastDataTypes'
+import VersionTag from '~/components/VersionTag'
 
 export const WeatherForecast = () => {
   const forecastRef = useRef<HTMLDivElement | null>(null)
@@ -50,55 +51,65 @@ export const WeatherForecast = () => {
   }
 
   const pullData = async () => {
-      let khsv_items: string[] = [];
-      await axios
-        .get('https://www.weather.gov/source/mdl/MOS/GFSMEX.t12z')
-        .then(function (response) {
-          const start_idx = response.data.search(/KHSV/)
-          const khsv_raw = response.data.substring(start_idx, start_idx + 1400)
-          khsv_items = khsv_raw.split(/\||\n/)
-          khsv_items.forEach((_part: unknown, index: number) => {
-            khsv_items[index] = khsv_items[index].trim()
-          })
-          console.log(khsv_items)
+    let khsv_items: string[] = []
+    await axios
+      .get('https://www.weather.gov/source/mdl/MOS/GFSMEX.t12z')
+      .then(function (response) {
+        const start_idx = response.data.search(/KHSV/)
+        const khsv_raw = response.data.substring(start_idx, start_idx + 1400)
+        khsv_items = khsv_raw.split(/\||\n/)
+        khsv_items.forEach((_part: unknown, index: number) => {
+          khsv_items[index] = khsv_items[index].trim()
         })
-      // Parse days
-      const days_raw = khsv_items.slice(9, 15 + 1);
-      const days: string[] = [];
-      days_raw.forEach((_part: unknown, index: number) => {
-        days.push(days_raw[index].substring(0, 3));
+        console.log(khsv_items)
       })
+    // Parse days
+    const days_raw = khsv_items.slice(9, 15 + 1)
+    const days: string[] = []
+    days_raw.forEach((_part: unknown, index: number) => {
+      days.push(days_raw[index].substring(0, 3))
+    })
 
-      // Parse temps
-      const temps_raw = khsv_items.slice(17, 23 + 1);
-      const low_temps: string[] = [];
-      const high_temps: string[] = [];
-      temps_raw.forEach((_part: unknown, index: number) => {
-        let start_idx = 0;
-        let stop_idx = 2;
-        if (index == 0) {
-          start_idx = 5;
-          stop_idx = 7;
-        }
-        low_temps.push(temps_raw[index].substring(start_idx, stop_idx));
-        high_temps.push(temps_raw[index].substring(start_idx + 4, stop_idx + 4));
-      })
-      
-      const mosForecastData: ForecastData[] = [];
-      for (let i = 0; i < 7; i++) {
-        mosForecastData.push({day: days[i], high: Number(high_temps[i]), low: Number(low_temps[i]), precip: 0, condition: "sunny", severe: false })
+    // Parse temps
+    const temps_raw = khsv_items.slice(17, 23 + 1)
+    const low_temps: string[] = []
+    const high_temps: string[] = []
+    temps_raw.forEach((_part: unknown, index: number) => {
+      let start_idx = 0
+      let stop_idx = 2
+      if (index == 0) {
+        start_idx = 5
+        stop_idx = 7
       }
+      low_temps.push(temps_raw[index].substring(start_idx, stop_idx))
+      high_temps.push(temps_raw[index].substring(start_idx + 4, stop_idx + 4))
+    })
 
-      setForecastData(mosForecastData);
+    const mosForecastData: ForecastData[] = []
+    for (let i = 0; i < 7; i++) {
+      mosForecastData.push({
+        day: days[i],
+        high: Number(high_temps[i]),
+        low: Number(low_temps[i]),
+        precip: 0,
+        condition: 'sunny',
+        severe: false,
+      })
+    }
+
+    setForecastData(mosForecastData)
   }
 
   return (
     <div className='flex flex-col items-center'>
       <div
         ref={forecastRef}
-        className='flex gap-4 p-6 bg-blue-100 rounded-lg justify-center fixed-width'
+        className='flex flex-col p-4 bg-blue-100 rounded-lg justify-center fixed-width'
       >
-        <WeeklyForecast forecastData={forecastData} />
+        <div className='flex gap-4 p-6'>
+          <WeeklyForecast forecastData={forecastData} />
+        </div>
+        <VersionTag />
       </div>
 
       {/* Save 7-day forecast infographic as a PNG */}

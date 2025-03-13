@@ -109,3 +109,11 @@ body {
 .fixed-width {
   width: 750px;
 }
+
+.app-tag {
+  font-weight: bold;
+    text-align: end;
+    position: relative;
+    bottom: 0;
+    right: 0;
+}
