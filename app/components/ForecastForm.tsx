@@ -1,4 +1,4 @@
-import ConditionIcon from './ConditionIcon'
+import { useState } from 'react'
 
 const daysOfTheWeek = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT']
 const conditions = [
@@ -11,11 +11,27 @@ const conditions = [
   'snow',
 ]
 
-const handleDegrees = e => {}
+const ForecastForm = ({ forecastData, updateForecastData }): JSX.Element => {
+  const [degreeUnits, setDegreeUnits] = useState('Fahrenheit')
+  const [formData, setFormData] = useState({})
 
-const handleTextInput = e => {}
+  const handleFormChange = e => {
+    const { name, value } = e.target
+    setFormData(prev => ({
+      ...prev,
+      [name]: value,
+    }))
+  }
 
-const ForecastForm = () => {
+  const handleFormSubmit = e => {
+    e.preventDefault()
+    console.log("Form data: ", formData)
+  }
+
+  const handleDegrees = e => {
+    setDegreeUnits(e.target.value)
+  }
+
   return (
     <div
       className='flex flex-col mb-10 justify-center items-center'
@@ -23,6 +39,7 @@ const ForecastForm = () => {
     >
       <h1 className='text-xl mt-5 mb-5'>Manual Forecast Data Entry</h1>
       <form
+        onSubmit={handleFormSubmit}
         className='flex flex-col justify-center items-center'
         style={{ width: '700px' }}
       >
@@ -32,6 +49,7 @@ const ForecastForm = () => {
             <select
               className='mt-2 mb-2 p-2 border rounded-lg text-white'
               style={{ width: '100px' }}
+              onChange={handleFormChange}
             >
               {daysOfTheWeek.map(day => (
                 <option key={day} value={day} className='text-black'>
@@ -44,6 +62,7 @@ const ForecastForm = () => {
             <label className='font-semibold text-white'>Units</label>
             <select
               className='mt-2 mb-2 p-2 border rounded-lg text-white'
+              onChange={handleDegrees}
               style={{ width: '150px' }}
             >
               <option className='text-black'>Fahrenheit</option>
@@ -64,10 +83,11 @@ const ForecastForm = () => {
                   id={`day${i + 1}high`}
                   name={`day${i + 1}high`}
                   className='mt-2 p-2 border rounded-lg text-white'
-                  onChange={e => handleTextInput(e.target.value)}
                   style={{ width: '100px' }}
+                  placeholder='0'
+                  onChange={handleFormChange}
                 />
-                <i>°F</i>
+                <i>°{degreeUnits === 'Fahrenheit' ? 'F' : 'C'}</i>
               </div>
             </div>
           ))}
@@ -83,10 +103,11 @@ const ForecastForm = () => {
                 id={`day${i + 1}low`}
                 name={`day${i + 1}low`}
                 className='mt-2 p-2 border rounded-lg text-white'
-                onChange={e => handleTextInput(e.target.value)}
                 style={{ width: '100px' }}
+                placeholder='0'
+                onChange={handleFormChange}
               />
-              <i>°F</i>
+              <i>°{degreeUnits === 'Fahrenheit' ? 'F' : 'C'}</i>
             </div>
           ))}
         </div>
@@ -103,9 +124,9 @@ const ForecastForm = () => {
                 min='0'
                 max='100'
                 className='mt-2 p-2 border rounded-lg text-white'
-                onChange={e => handleTextInput(e.target.value)}
                 style={{ width: '100px' }}
                 placeholder='0'
+                onChange={handleFormChange}
               />
               <i>%</i>
             </div>
@@ -120,11 +141,13 @@ const ForecastForm = () => {
               id={`day${i + 1}condition`}
               name={`day${i + 1}condition`}
               className='mt-2 p-2 border rounded-lg text-white'
-              onChange={e => handleTextInput(e.target.value)}
               style={{ width: '100px' }}
+              onChange={handleFormChange}
             >
               {conditions.map(condition => (
-                <option value={condition}>{condition}</option>
+                <option value={condition} className='text-black'>
+                  {condition}
+                </option>
               ))}
             </select>
           ))}
@@ -135,15 +158,20 @@ const ForecastForm = () => {
           </p>
           {daysOfTheWeek.map((_day, i) => (
             <input
-              type='radio'
+              type='checkbox'
               id={`day${i + 1}condition`}
               name={`day${i + 1}condition`}
               className='mt-2 p-2 border rounded-lg text-white'
-              onChange={e => handleTextInput(e.target.value)}
               style={{ width: '100px' }}
+              onChange={handleFormChange}
             ></input>
           ))}
         </div>
+        <input
+          className='mt-10 p-2 border rounded-lg text-white'
+          type='submit'
+          value='Generate'
+        />
       </form>
     </div>
   )

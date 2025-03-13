@@ -56,51 +56,105 @@ export const WeatherForecast = () => {
     setZuluMOS(e.target.value)
   }
 
-  const pullData = async () => {
-    const mosURL =
-      zuluMOS === '00z'
-        ? 'https://www.weather.gov/source/mdl/MOS/GFSMEX.t00z'
-        : 'https://www.weather.gov/source/mdl/MOS/GFSMEX.t12z'
-    let khsv_items: string[] = []
-    await axios.get(mosURL).then(function (response) {
-      const start_idx = response.data.search(/KHSV/)
-      const khsv_raw = response.data.substring(start_idx, start_idx + 1400)
-      khsv_items = khsv_raw.split(/\||\n/)
-      khsv_items.forEach((_part: unknown, index: number) => {
-        khsv_items[index] = khsv_items[index].trim()
-      })
-      console.log(khsv_items)
-    })
-    // Parse days
-    const days_raw = khsv_items.slice(9, 15 + 1)
-    const days: string[] = []
-    days_raw.forEach((_part: unknown, index: number) => {
-      days.push(days_raw[index].substring(0, 3))
-    })
+  const extractTemps = (data: string, is00z = false) => {
+    const regex = is00z
+      ? /(?<=X\/N\s)((?:\s*\d+\s*\|?)+)/g
+      : /(?<=N\/X\s)((?:\s*\d+\s*\|?)+)/g
 
-    // Parse temps
-    const temps_raw = khsv_items.slice(17, 23 + 1)
-    const low_temps: string[] = []
-    const high_temps: string[] = []
-    temps_raw.forEach((_part: unknown, index: number) => {
-      let start_idx = 0
-      let stop_idx = 2
-      if (index == 0) {
-        start_idx = 5
-        stop_idx = 7
+    const match = data.toString().match(regex)
+
+    if (match) {
+      const tempRow = match[0].trim()
+      const tempValues = tempRow.split('|').map(value => value.trim())
+
+      const lowTemps = []
+      const highTemps = []
+
+      if (is00z) {
+        lowTemps.push(999)
+        highTemps.push(Number(tempValues[0]))
+
+        tempValues.slice(1).forEach(value => {
+          const [low, high] = value.split(/\s+/)
+          lowTemps.push(low)
+          highTemps.push(high)
+        })
+      } else {
+        tempValues.forEach(value => {
+          const [low, high] = value.split(/\s+/)
+          lowTemps.push(low)
+          highTemps.push(high)
+        })
       }
-      low_temps.push(temps_raw[index].substring(start_idx, stop_idx))
-      high_temps.push(temps_raw[index].substring(start_idx + 4, stop_idx + 4))
+
+      // Remove last item because it is not valid temperature
+      lowTemps.pop()
+      highTemps.pop()
+      return { lowTemps: lowTemps, highTemps: highTemps }
+    }
+
+    return null
+  }
+
+  const extractDays = (data: string) => {
+    const regex = /\b(MON|TUE|WED|THU|FRI|SAT|SUN)\b/g
+
+    const days = [...data.toString().matchAll(regex)].map(m => m[0])
+
+    days.pop()
+
+    return days
+  }
+
+  const extractPrecip = (data: string, is00z = false) => {
+    const regex = /P24\s*(?:\|\s*)?([\d\s|]*)/
+
+    const match = data.toString().match(regex)
+    if (!match) return []
+
+    const values = match[1].match(/\d{1,3}/g) || []
+    if (is00z) {
+      values.unshift(-1)
+    }
+
+    return values.map(Number)
+  }
+
+  const pullData = async () => {
+    const is00z = zuluMOS === '00z'
+    const mosURL = is00z
+      ? 'https://www.weather.gov/source/mdl/MOS/GFSMEX.t00z'
+      : 'https://www.weather.gov/source/mdl/MOS/GFSMEX.t12z'
+
+    const conditionRegex =
+      /CLD\s+[A-Z]{2}\s+([A-Z]{2})\|\s+[A-Z]{2}\s+([A-Z]{2})\|\s+[A-Z]{2}\s+([A-Z]{2})\|\s+[A-Z]{2}\s+([A-Z]{2})\|\s+[A-Z]{2}\s+([A-Z]{2})\|\s+[A-Z]{2}\s+([A-Z]{2})/
+
+    let days: string[] | undefined = []
+    let precip: number[] = []
+    let temps: { lowTemps: number[]; highTemps: number[] } | null = {
+      lowTemps: [],
+      highTemps: [],
+    }
+
+    await axios.get(mosURL).then(function (response) {
+      const khsv_raw: string = response.data.match(
+        // eslint-disable-next-line no-useless-escape
+        /KHSV\s+GFSX(?:.|\n)*?(?=\n[A-Z]{4}\s+GFSX|\Z)/,
+      )
+
+      temps = extractTemps(khsv_raw, is00z)
+      days = extractDays(khsv_raw)
+      precip = extractPrecip(khsv_raw, is00z)
     })
 
     const mosForecastData: ForecastData[] = []
     for (let i = 0; i < 7; i++) {
       mosForecastData.push({
         day: days[i],
-        high: Number(high_temps[i]),
-        low: Number(low_temps[i]),
-        precip: 0,
-        condition: 'sunny',
+        high: temps.highTemps[i],
+        low: temps.lowTemps[i],
+        precip: precip[i],
+        condition: precip[i] > 20 ? 'rain' : 'sunny',
         severe: false,
       })
     }
@@ -110,7 +164,10 @@ export const WeatherForecast = () => {
 
   return (
     <div className='flex flex-col items-center'>
-      <ForecastForm />
+      <ForecastForm
+        forecastData={forecastData}
+        updateForecastData={setForecastData}
+      />
       <div
         ref={forecastRef}
         className='flex flex-col p-4 bg-blue-100 rounded-lg justify-center fixed-width'

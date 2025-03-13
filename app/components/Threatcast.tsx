@@ -137,7 +137,7 @@ const Threatcast: React.FC = ({ threatRef }) => {
               Hazards Outlook {city !== '' ? `for ${city}` : ''}
             </h3>
             <h4 className='text-md font-bold mb-4 text-black text-center'>
-              FRI PM - SAT AM
+              SAT 12 AM - 7 AM
             </h4>
             <BarChart
               width={650}
