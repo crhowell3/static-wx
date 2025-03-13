@@ -73,11 +73,12 @@ cd static-wx
 npm i
 ```
 
-### Configuring
+### Building and running
 
-Edit `public/forecast.yaml` and then run:
+Run these commands to initialize the build and start up the client application:
 
 ```shell
+npm run build
 npm run dev
 ```
 
