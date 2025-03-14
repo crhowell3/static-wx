@@ -8,9 +8,7 @@ import {
   Rectangle,
   Cell,
 } from 'recharts'
-import React, { useState } from 'react'
 import { Tornado, Waves, CloudHail, Wind } from 'lucide-react'
-import VersionTag from './VersionTag'
 
 const colorMapping: Record<number, string> = {
   1: '#84CC16',
@@ -18,16 +16,6 @@ const colorMapping: Record<number, string> = {
   3: '#F97316',
   4: '#EF4444',
 }
-
-const severityLabels: Record<string, number> = {
-  NONE: 0,
-  LOW: 1,
-  MEDIUM: 2,
-  HIGH: 3,
-  EXTREME: 4,
-}
-
-const categories: string[] = ['Tornadoes', 'Wind', 'Hail', 'Flooding']
 
 const formatYAxis = (value: number) => {
   switch (value) {
@@ -64,77 +52,17 @@ const renderCustomAxisTick = ({ x, y, payload }) => {
   return <g transform={`translate(${x - 30}, ${y - 10})`}>{icon}</g>
 }
 
-const Threatcast: React.FC = ({ threatRef }) => {
-  const [threatLevels, setThreatLevels] = useState({
-    Tornadoes: 'NONE',
-    Wind: 'NONE',
-    Hail: 'NONE',
-    Flooding: 'NONE',
-  })
-  const [city, setCity] = useState('')
-
-  // Generate the threatData dynamically based on threatLevels
-  const generateThreatData = () => {
-    return categories.map(category => ({
-      name: category,
-      uv: severityLabels[threatLevels[category]],
-    }))
-  }
-
-  const handleChange = (category: string, value: string) => {
-    setThreatLevels(prev => ({ ...prev, [category]: value }))
-  }
-
-  const handleTextInput = (value: string) => {
-    setCity(value)
-  }
-
-  // Generate threat data whenever the threatLevels state changes
-  const threatData = generateThreatData()
-
+function Threatcast(props) {
   return (
     <div className='flex flex-col items-center gap-6'>
-      <div className='p-6 bg-blue-100 rounded-lg'>
-        <h2 className='text-lg font-bold mb-4 text-black'>
-          Threat Level Editor
-        </h2>
-        <div className='grid grid-cols-4 gap-4'>
-          {categories.map(category => (
-            <div key={category} className='flex flex-col items-center'>
-              <label className='font-semibold text-black'>{category}</label>
-              <select
-                value={threatLevels[category]}
-                onChange={e => handleChange(category, e.target.value)}
-                className='mt-2 p-2 border rounded-lg text-black'
-              >
-                {Object.keys(severityLabels).map(label => (
-                  <option key={label} value={label}>
-                    {label}
-                  </option>
-                ))}
-              </select>
-            </div>
-          ))}
-        </div>
-        <div className='flex flex-col items-center'>
-          <label className='font-semibold text-black'>City</label>
-          <input
-            type='text'
-            name='City'
-            className='mt-2 p-2 border rounded-lg text-black'
-            onChange={e => handleTextInput(e.target.value)}
-          />
-        </div>
-      </div>
       <div
-        ref={threatRef}
         className='p-6 rounded-lg bg-white flex justify-center items-center flex-col'
         style={{ width: '700px', height: '500px' }}
       >
         <ResponsiveContainer width='100%' height='100%'>
           <div>
             <h3 className='text-xl font-bold text-black text-center'>
-              Hazards Outlook {city !== '' ? `for ${city}` : ''}
+              Hazards Outlook {props.city !== '' ? `for ${props.city}` : ''}
             </h3>
             <h4 className='text-md font-bold mb-4 text-black text-center'>
               SAT 12 AM - 7 AM
@@ -143,7 +71,7 @@ const Threatcast: React.FC = ({ threatRef }) => {
               width={650}
               height={400}
               layout='vertical'
-              data={threatData}
+              data={props.threatData}
               margin={{
                 top: 15,
                 right: 40,
@@ -169,14 +97,13 @@ const Threatcast: React.FC = ({ threatRef }) => {
                 dataKey='uv'
                 activeBar={<Rectangle fill='gold' stroke='purple' />}
               >
-                {threatData.map((entry, index) => (
+                {props.threatData.map((entry, index) => (
                   <Cell key={`cell-${index}`} fill={colorMapping[entry.uv]} />
                 ))}
               </Bar>
             </BarChart>
           </div>
         </ResponsiveContainer>
-        <VersionTag />
       </div>
     </div>
   )
