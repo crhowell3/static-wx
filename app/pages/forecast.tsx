@@ -72,6 +72,10 @@ export const WeatherForecast = () => {
   const [forecastData, setForecastData] = useState<ForecastData[]>(defaultForecastData)
   const [zuluMOS, setZuluMOS] = useState('00z')
 
+  const updateData = (newData) => {
+    setForecastData(newData)
+  }
+
   const saveAsPng = () => {
     if (forecastRef.current) {
       html2canvas(forecastRef.current).then(canvas => {
@@ -207,8 +211,7 @@ export const WeatherForecast = () => {
   return (
     <div className='flex flex-col items-center'>
       <ForecastForm
-        forecastData={forecastData}
-        updateForecastData={setForecastData}
+        updateForecastData={updateData}
       />
       <div
         ref={forecastRef}
