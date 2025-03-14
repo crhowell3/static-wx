@@ -77,6 +77,44 @@ const severityLabels: Record<string, number> = {
   EXTREME: 4,
 }
 
+const defaultFormData = {
+  day1high: 0,
+  day1low: 0,
+  day1precip: 0,
+  day1condition: 'sunny',
+  day1severe: false,
+  day2high: 0,
+  day2low: 0,
+  day2precip: 0,
+  day2condition: 'sunny',
+  day2severe: false,
+  day3high: 0,
+  day3low: 0,
+  day3precip: 0,
+  day3condition: 'sunny',
+  day3severe: false,
+  day4high: 0,
+  day4low: 0,
+  day4precip: 0,
+  day4condition: 'sunny',
+  day4severe: false,
+  day5high: 0,
+  day5low: 0,
+  day5precip: 0,
+  day5condition: 'sunny',
+  day5severe: false,
+  day6high: 0,
+  day6low: 0,
+  day6precip: 0,
+  day6condition: 'sunny',
+  day6severe: false,
+  day7high: 0,
+  day7low: 0,
+  day7precip: 0,
+  day7condition: 'sunny',
+  day7severe: false,
+}
+
 export const WeatherForecast = () => {
   const forecastRef = useRef<HTMLDivElement | null>(null)
   const threatRef = useRef<HTMLDivElement | null>(null)
@@ -91,6 +129,7 @@ export const WeatherForecast = () => {
   })
   const [city, setCity] = useState('')
   const [timeframe, setTimeframe] = useState('')
+  const [formData, setFormData] = useState(defaultFormData)
 
   // Generate the threatData dynamically based on threatLevels
   const generateThreatData = () => {
@@ -246,6 +285,14 @@ export const WeatherForecast = () => {
         condition: precip[i] > 20 ? 'rain' : 'sunny',
         severe: false,
       })
+      setFormData(prev => ({
+        ...prev,
+        [`day${i + 1}high`]: temps?.highTemps[i],
+        [`day${i + 1}low`]: temps?.lowTemps[i],
+        [`day${i + 1}precip`]: precip[i],
+        [`day${i + 1}condition`]: precip[i] > 20 ? 'rain' : 'sunny',
+        [`day${i + 1}severe`]: false,
+      }))
     }
 
     setForecastData(mosForecastData)
@@ -253,7 +300,11 @@ export const WeatherForecast = () => {
 
   return (
     <div className='flex flex-col items-center'>
-      <ForecastForm updateForecastData={updateData} />
+      <ForecastForm
+        updateForecastData={updateData}
+        formData={formData}
+        setFormData={setFormData}
+      />
       <div
         ref={forecastRef}
         className='flex flex-col p-4 bg-blue-100 rounded-lg justify-center fixed-width'
@@ -321,7 +372,11 @@ export const WeatherForecast = () => {
         className='flex flex-col p-4 bg-white rounded-lg justify-center fixed-width'
       >
         <div className='flex p-2'>
-          <Threatcast threatData={threatData} city={city} timeframe={timeframe} />
+          <Threatcast
+            threatData={threatData}
+            city={city}
+            timeframe={timeframe}
+          />
         </div>
         <VersionTag />
       </div>

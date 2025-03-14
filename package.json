@@ -2,7 +2,7 @@
   "name": "static-wx",
   "private": true,
   "type": "module",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "scripts": {
     "build": "genversion --es6 app/autobuild_version.tsx && react-router build",
     "dev": "react-router dev",
