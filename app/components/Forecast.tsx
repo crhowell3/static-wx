@@ -38,7 +38,9 @@ const WeeklyForecast = ({ forecastData }: ForecastDataProps): JSX.Element => {
           <span className='text-xl font-semibold mt-2 text-black'>
             {high}°F
           </span>
-            <span className='text-l font-semibold text-gray-500'>{low === 999 ? '-' : `${low}°F`}</span>
+          <span className='text-l font-semibold text-gray-500'>
+            {low === 999 ? '-' : `${low}°F`}
+          </span>
         </div>
       ))}
     </>

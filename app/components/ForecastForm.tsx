@@ -2,6 +2,7 @@ import { useState } from 'react'
 
 const daysOfTheWeek = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT']
 const conditions = [
+  'sunny',
   'mostly sunny',
   'partly cloudy',
   'cloudy',
@@ -25,7 +26,7 @@ const ForecastForm = ({ forecastData, updateForecastData }): JSX.Element => {
 
   const handleFormSubmit = e => {
     e.preventDefault()
-    console.log("Form data: ", formData)
+    console.log('Form data: ', formData)
   }
 
   const handleDegrees = e => {
@@ -86,6 +87,7 @@ const ForecastForm = ({ forecastData, updateForecastData }): JSX.Element => {
                   style={{ width: '100px' }}
                   placeholder='0'
                   onChange={handleFormChange}
+                  required
                 />
                 <i>°{degreeUnits === 'Fahrenheit' ? 'F' : 'C'}</i>
               </div>
@@ -106,6 +108,7 @@ const ForecastForm = ({ forecastData, updateForecastData }): JSX.Element => {
                 style={{ width: '100px' }}
                 placeholder='0'
                 onChange={handleFormChange}
+                required
               />
               <i>°{degreeUnits === 'Fahrenheit' ? 'F' : 'C'}</i>
             </div>
@@ -127,6 +130,7 @@ const ForecastForm = ({ forecastData, updateForecastData }): JSX.Element => {
                 style={{ width: '100px' }}
                 placeholder='0'
                 onChange={handleFormChange}
+                required
               />
               <i>%</i>
             </div>
@@ -143,6 +147,7 @@ const ForecastForm = ({ forecastData, updateForecastData }): JSX.Element => {
               className='mt-2 p-2 border rounded-lg text-white'
               style={{ width: '100px' }}
               onChange={handleFormChange}
+              defaultValue={'sunny'}
             >
               {conditions.map(condition => (
                 <option value={condition} className='text-black'>

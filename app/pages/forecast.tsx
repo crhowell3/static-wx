@@ -1,34 +1,76 @@
 import { useEffect, useRef, useState } from 'react'
 import html2canvas from 'html2canvas-pro'
 import Threatcast from '../components/Threatcast'
-import yaml from 'js-yaml'
 import WeeklyForecast from '../components/Forecast'
 import axios from 'axios'
 import type { ForecastData } from '~/types/ForecastDataTypes'
 import VersionTag from '~/components/VersionTag'
 import ForecastForm from '~/components/ForecastForm'
 
+const defaultForecastData: ForecastData[] = [
+  {
+    day: 'SUN',
+    high: 75,
+    low: 65,
+    precip: 0,
+    condition: 'sunny',
+    severe: false,
+  },
+  {
+    day: 'MON',
+    high: 75,
+    low: 65,
+    precip: 0,
+    condition: 'sunny',
+    severe: false,
+  },
+  {
+    day: 'TUE',
+    high: 75,
+    low: 65,
+    precip: 0,
+    condition: 'sunny',
+    severe: false,
+  },
+  {
+    day: 'WED',
+    high: 75,
+    low: 65,
+    precip: 0,
+    condition: 'sunny',
+    severe: false,
+  },
+  {
+    day: 'THU',
+    high: 75,
+    low: 65,
+    precip: 0,
+    condition: 'sunny',
+    severe: false,
+  },
+  {
+    day: 'FRI',
+    high: 75,
+    low: 65,
+    precip: 0,
+    condition: 'sunny',
+    severe: false,
+  },
+  {
+    day: 'SAT',
+    high: 75,
+    low: 65,
+    precip: 0,
+    condition: 'sunny',
+    severe: false,
+  },
+]
+
 export const WeatherForecast = () => {
   const forecastRef = useRef<HTMLDivElement | null>(null)
   const threatRef = useRef<HTMLDivElement | null>(null)
-  const [forecastData, setForecastData] = useState<ForecastData[]>([])
+  const [forecastData, setForecastData] = useState<ForecastData[]>(defaultForecastData)
   const [zuluMOS, setZuluMOS] = useState('00z')
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const forecastRes = await fetch('./forecast.yaml')
-        const forecastText = await forecastRes.text()
-        const forecastData = yaml.load(forecastText) as {
-          forecast: ForecastData[]
-        }
-        setForecastData(forecastData.forecast)
-      } catch (error) {
-        console.error('Error loading YAML: ', error)
-      }
-    }
-    fetchData()
-  }, [])
 
   const saveAsPng = () => {
     if (forecastRef.current) {
