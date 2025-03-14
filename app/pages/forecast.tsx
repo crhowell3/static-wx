@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useRef, useState } from 'react'
 import html2canvas from 'html2canvas-pro'
 import Threatcast from '../components/Threatcast'
 import WeeklyForecast from '../components/Forecast'
@@ -6,6 +6,7 @@ import axios from 'axios'
 import type { ForecastData } from '~/types/ForecastDataTypes'
 import VersionTag from '~/components/VersionTag'
 import ForecastForm from '~/components/ForecastForm'
+import ThreatcastForm from '~/components/ThreatcastForm'
 
 const defaultForecastData: ForecastData[] = [
   {
@@ -66,15 +67,57 @@ const defaultForecastData: ForecastData[] = [
   },
 ]
 
+const categories: string[] = ['Tornadoes', 'Wind', 'Hail', 'Flooding']
+
+const severityLabels: Record<string, number> = {
+  NONE: 0,
+  LOW: 1,
+  MEDIUM: 2,
+  HIGH: 3,
+  EXTREME: 4,
+}
+
 export const WeatherForecast = () => {
   const forecastRef = useRef<HTMLDivElement | null>(null)
   const threatRef = useRef<HTMLDivElement | null>(null)
-  const [forecastData, setForecastData] = useState<ForecastData[]>(defaultForecastData)
+  const [forecastData, setForecastData] =
+    useState<ForecastData[]>(defaultForecastData)
   const [zuluMOS, setZuluMOS] = useState('00z')
+  const [threatLevels, setThreatLevels] = useState({
+    Tornadoes: 'NONE',
+    Wind: 'NONE',
+    Hail: 'NONE',
+    Flooding: 'NONE',
+  })
+  const [city, setCity] = useState('')
+  const [timeframe, setTimeframe] = useState('')
 
-  const updateData = (newData) => {
+  // Generate the threatData dynamically based on threatLevels
+  const generateThreatData = () => {
+    return categories.map(category => ({
+      name: category,
+      uv: severityLabels[threatLevels[category]],
+    }))
+  }
+
+  const updateCityFromForm = newData => {
+    setCity(newData)
+  }
+
+  const updateThreatLevelsFromForm = newData => {
+    setThreatLevels(newData)
+  }
+
+  const updateTimeframeFromForm = newData => {
+    setTimeframe(newData)
+  }
+
+  const updateData = newData => {
     setForecastData(newData)
   }
+
+  // Generate threat data whenever the threatLevels state changes
+  const threatData = generateThreatData()
 
   const saveAsPng = () => {
     if (forecastRef.current) {
@@ -210,9 +253,7 @@ export const WeatherForecast = () => {
 
   return (
     <div className='flex flex-col items-center'>
-      <ForecastForm
-        updateForecastData={updateData}
-      />
+      <ForecastForm updateForecastData={updateData} />
       <div
         ref={forecastRef}
         className='flex flex-col p-4 bg-blue-100 rounded-lg justify-center fixed-width'
@@ -267,8 +308,22 @@ export const WeatherForecast = () => {
       </div>
 
       <br />
-      <div className='flex gap-4 p-6 bg-blue-100 rounded-lg justify-center fixed-width'>
-        <Threatcast threatRef={threatRef} />
+      <ThreatcastForm
+        setCity={updateCityFromForm}
+        threatLevels={threatLevels}
+        setThreatLevels={updateThreatLevelsFromForm}
+        categories={categories}
+        severityLabels={severityLabels}
+        setTimeframe={updateTimeframeFromForm}
+      />
+      <div
+        ref={threatRef}
+        className='flex flex-col p-4 bg-white rounded-lg justify-center fixed-width'
+      >
+        <div className='flex p-2'>
+          <Threatcast threatData={threatData} city={city} timeframe={timeframe} />
+        </div>
+        <VersionTag />
       </div>
 
       <button

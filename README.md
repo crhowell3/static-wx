@@ -42,9 +42,9 @@
 
 ## 💭 About
 
-static-wx is a simple React Router Single Page Application (SPA) that takes in
-a YAML-formatted configuration file containing 7-day weather forecast data and
-produces a downloadable graphic in PNG format.
+static-wx is a simple React Router Single Page Application (SPA) that provides
+both automated and manual data-driven generation of infographics for forecasts,
+hazard outlooks, and more.
 
 ## 🔰 Getting Started
 
