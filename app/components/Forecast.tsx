@@ -33,12 +33,14 @@ const WeeklyForecast = ({ forecastData }: ForecastDataProps): JSX.Element => {
           )}
           <ConditionIcon condition={condition} />
           <span className='text-sm font-semibold mt-4 text-black'>
-            {precip}%
+            {precip === -1 ? '-' : `${precip}%`}
           </span>
           <span className='text-xl font-semibold mt-2 text-black'>
             {high}°F
           </span>
-          <span className='text-l font-semibold text-gray-500'>{low}°F</span>
+          <span className='text-l font-semibold text-gray-500'>
+            {low === 999 ? '-' : `${low}°F`}
+          </span>
         </div>
       ))}
     </>
