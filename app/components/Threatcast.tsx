@@ -65,7 +65,7 @@ function Threatcast(props) {
               Hazards Outlook {props.city !== '' ? `for ${props.city}` : ''}
             </h3>
             <h4 className='text-md font-bold mb-4 text-black text-center'>
-              SAT 12 AM - 7 AM
+              {props.timeframe}
             </h4>
             <BarChart
               width={650}

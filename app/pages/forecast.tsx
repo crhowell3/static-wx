@@ -90,6 +90,7 @@ export const WeatherForecast = () => {
     Flooding: 'NONE',
   })
   const [city, setCity] = useState('')
+  const [timeframe, setTimeframe] = useState('')
 
   // Generate the threatData dynamically based on threatLevels
   const generateThreatData = () => {
@@ -105,6 +106,10 @@ export const WeatherForecast = () => {
 
   const updateThreatLevelsFromForm = newData => {
     setThreatLevels(newData)
+  }
+
+  const updateTimeframeFromForm = newData => {
+    setTimeframe(newData)
   }
 
   const updateData = newData => {
@@ -309,13 +314,14 @@ export const WeatherForecast = () => {
         setThreatLevels={updateThreatLevelsFromForm}
         categories={categories}
         severityLabels={severityLabels}
+        setTimeframe={updateTimeframeFromForm}
       />
       <div
         ref={threatRef}
-        className='flex flex-col p-4 bg-blue-100 rounded-lg justify-center fixed-width'
+        className='flex flex-col p-4 bg-white rounded-lg justify-center fixed-width'
       >
-        <div className='flex gap-4 p-6'>
-          <Threatcast threatData={threatData} city={city} />
+        <div className='flex p-2'>
+          <Threatcast threatData={threatData} city={city} timeframe={timeframe} />
         </div>
         <VersionTag />
       </div>

@@ -3,8 +3,12 @@ function ThreatcastForm(props) {
     props.setThreatLevels(prev => ({ ...prev, [category]: value }))
   }
 
-  const handleTextInput = (value: string) => {
+  const handleCityChange = (value: string) => {
     props.setCity(value)
+  }
+
+  const handleTimeframeChange = (value: string) => {
+    props.setTimeframe(value)
   }
 
   return (
@@ -31,14 +35,25 @@ function ThreatcastForm(props) {
           </div>
         ))}
       </div>
-      <div className='flex flex-col items-center mt-5'>
-        <label className='font-semibold text-white'>City</label>
-        <input
-          type='text'
-          name='City'
-          className='mt-2 p-2 border rounded-lg text-white'
-          onChange={e => handleTextInput(e.target.value)}
-        />
+      <div className='flex flex-row gap-4'>
+        <div className='flex flex-col items-center mt-5'>
+          <label className='font-semibold text-white'>City</label>
+          <input
+            type='text'
+            name='City'
+            className='mt-2 p-2 border rounded-lg text-white'
+            onChange={e => handleCityChange(e.target.value)}
+          />
+        </div>
+        <div className='flex flex-col items-center mt-5'>
+          <label className='font-semibold text-white'>Timeframe</label>
+          <input
+            type='text'
+            name='Timeframe'
+            className='mt-2 p-2 border rounded-lg text-white'
+            onChange={e => handleTimeframeChange(e.target.value)}
+          />
+        </div>
       </div>
     </div>
   )
