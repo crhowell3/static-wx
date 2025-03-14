@@ -37,7 +37,7 @@ function ThreatcastForm(props) {
       </div>
       <div className='flex flex-row gap-4'>
         <div className='flex flex-col items-center mt-5'>
-          <label className='font-semibold text-white'>City</label>
+          <label className='font-semibold text-white'>Location</label>
           <input
             type='text'
             name='City'
