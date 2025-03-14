@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, type JSX } from 'react'
 import type { ForecastData } from '~/types/ForecastDataTypes'
 
 const daysOfTheWeek = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT']
@@ -13,61 +13,23 @@ const conditions = [
   'snow',
 ]
 
-const defaultFormData = {
-  day1high: 0,
-  day1low: 0,
-  day1precip: 0,
-  day1condition: 'sunny',
-  day1severe: false,
-  day2high: 0,
-  day2low: 0,
-  day2precip: 0,
-  day2condition: 'sunny',
-  day2severe: false,
-  day3high: 0,
-  day3low: 0,
-  day3precip: 0,
-  day3condition: 'sunny',
-  day3severe: false,
-  day4high: 0,
-  day4low: 0,
-  day4precip: 0,
-  day4condition: 'sunny',
-  day4severe: false,
-  day5high: 0,
-  day5low: 0,
-  day5precip: 0,
-  day5condition: 'sunny',
-  day5severe: false,
-  day6high: 0,
-  day6low: 0,
-  day6precip: 0,
-  day6condition: 'sunny',
-  day6severe: false,
-  day7high: 0,
-  day7low: 0,
-  day7precip: 0,
-  day7condition: 'sunny',
-  day7severe: false,
-}
-
 function ForecastForm(props): JSX.Element {
   const [degreeUnits, setDegreeUnits] = useState('Fahrenheit')
-  const [formData, setFormData] = useState(defaultFormData)
+
   const [firstDay, setFirstDay] = useState('SUN')
 
   const handleFormChange = e => {
     const { name, value } = e.target
-    setFormData(prev => ({
+    props.setFormData(prev => ({
       ...prev,
       [name]: value,
     }))
   }
 
   const handleCheckboxUpdate = e => {
-    setFormData(prev => ({
-        ...prev,
-        [e.target.name]: e.target.checked
+    props.setFormData(prev => ({
+      ...prev,
+      [e.target.name]: e.target.checked,
     }))
   }
 
@@ -82,11 +44,11 @@ function ForecastForm(props): JSX.Element {
     for (let i = 0; i < 7; i++) {
       newData.push({
         day: daysOfTheWeek[(dayIdx + i) % 7],
-        high: formData[`day${i + 1}high`],
-        low: formData[`day${i + 1}low`],
-        precip: formData[`day${i + 1}precip`],
-        condition: formData[`day${i + 1}condition`],
-        severe: Boolean(formData[`day${i + 1}severe`]),
+        high: props.formData[`day${i + 1}high`],
+        low: props.formData[`day${i + 1}low`],
+        precip: props.formData[`day${i + 1}precip`],
+        condition: props.formData[`day${i + 1}condition`],
+        severe: Boolean(props.formData[`day${i + 1}severe`]),
       })
     }
     props.updateForecastData(newData)
@@ -147,7 +109,7 @@ function ForecastForm(props): JSX.Element {
                   type='number'
                   id={`day${i + 1}high`}
                   name={`day${i + 1}high`}
-                  value={formData[`day${i + 1}high`]}
+                  value={props.formData[`day${i + 1}high`]}
                   className='mt-2 p-2 border rounded-lg text-white'
                   style={{ width: '100px' }}
                   placeholder='0'
@@ -169,7 +131,7 @@ function ForecastForm(props): JSX.Element {
                 type='number'
                 id={`day${i + 1}low`}
                 name={`day${i + 1}low`}
-                value={formData[`day${i + 1}low`]}
+                value={props.formData[`day${i + 1}low`]}
                 className='mt-2 p-2 border rounded-lg text-white'
                 style={{ width: '100px' }}
                 placeholder='0'
@@ -192,7 +154,7 @@ function ForecastForm(props): JSX.Element {
                 name={`day${i + 1}precip`}
                 min='0'
                 max='100'
-                value={formData[`day${i + 1}precip`]}
+                value={props.formData[`day${i + 1}precip`]}
                 className='mt-2 p-2 border rounded-lg text-white'
                 style={{ width: '100px' }}
                 placeholder='0'
@@ -214,7 +176,7 @@ function ForecastForm(props): JSX.Element {
               className='mt-2 p-2 border rounded-lg text-white'
               style={{ width: '100px' }}
               onChange={handleFormChange}
-              value={formData[`day${i + 1}condition`]}
+              value={props.formData[`day${i + 1}condition`]}
             >
               {conditions.map(condition => (
                 <option value={condition} className='text-black'>
@@ -236,7 +198,7 @@ function ForecastForm(props): JSX.Element {
               className='mt-2 p-2 border rounded-lg text-white'
               style={{ width: '100px' }}
               onChange={handleCheckboxUpdate}
-              value={formData[`day${i + 1}severe`]}
+              value={props.formData[`day${i + 1}severe`]}
             ></input>
           ))}
         </div>
