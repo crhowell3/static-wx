@@ -10,7 +10,7 @@
     "typecheck": "react-router typegen && tsc"
   },
   "dependencies": {
-    "@react-router/node": "^7.2.0",
+    "@react-router/node": "^7.6.2",
     "@react-router/serve": "^7.2.0",
     "axios": "^1.8.2",
     "genversion": "^3.2.0",
